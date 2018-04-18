@@ -7,7 +7,7 @@ const bot = new Discord.Client({
 	disableEveryone: true
 });
 bot.commands = new Discord.Collection();
-bot.nhl = require("./nhl.json")
+bot.nhl = require("./nhl.json");
 
 fs.readdir("./cmds/", (err, files) => {
 	if (err) console.error(err);

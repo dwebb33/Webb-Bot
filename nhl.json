@@ -1,0 +1,43 @@
+{
+    "2017030133": {
+        "away": {
+            "record": 1,
+            "score": 3,
+            "name": "Washington Capitals"
+        },
+        "home": {
+            "record": 2,
+            "score": 2,
+            "name": "Columbus Blue Jackets"
+        },
+        "period": {
+            "Period": "2OT",
+            "timeRemaining": "END"
+        }
+    },
+    "2017030144": {
+        "away": {
+            "score": 0,
+            "name": "Pittsburgh Penguins"
+        },
+        "home": {
+            "score": 0,
+            "name": "Philadelphia Flyers"
+        },
+        "period": {}
+    },
+    "2017030174": {
+        "away": {
+            "score": 1,
+            "name": "Vegas Golden Knights"
+        },
+        "home": {
+            "score": 0,
+            "name": "Los Angeles Kings"
+        },
+        "period": {
+            "Period": "2nd",
+            "timeRemaining": "END"
+        }
+    }
+}

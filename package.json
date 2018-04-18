@@ -1,0 +1,13 @@
+{
+  "name": "webb-bot",
+  "version": "0.0.1",
+  "description": "Test Discord Bot",
+  "main": "bot.js",
+  "author": "Penguin",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^11.3.2",
+    "snekfetch": "^3.6.4",
+    "statsapi-nhl": "^1.0.3"
+  }
+}

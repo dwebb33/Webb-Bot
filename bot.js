@@ -8,6 +8,7 @@ const bot = new Discord.Client({
 });
 bot.commands = new Discord.Collection();
 bot.nhl = require("./nhl.json");
+bot.currency = require("./currency.json");
 
 fs.readdir("./cmds/", (err, files) => {
 	if (err) console.error(err);
@@ -27,8 +28,11 @@ fs.readdir("./cmds/", (err, files) => {
 	});
 });
 
+
 bot.on("ready", async () => {
+
 	console.log(`Bot is ready! ${bot.user.username}`);
+
 
 	// try {
 	//     let link = await bot.generateInvite(["ADMINISTRATOR"]);
@@ -36,6 +40,16 @@ bot.on("ready", async () => {
 	// } catch(e) {
 	//     console.log(e.stack);
 	// }
+
+	bot.user.setStatus('Online') // Status goes here, It can be 'Online', 'idle', 'invisible', & 'dnd'
+	bot.user.setPresence({
+		game: {
+			name: 'For Help Type "!Help"',
+			type: 1,
+			url: 'https://www.twitch.tv/mrgobstopper',
+
+		}
+	});
 });
 
 bot.on("message", async message => {
@@ -52,5 +66,21 @@ bot.on("message", async message => {
 	if (cmd) cmd.run(bot, message, args);
 
 });
+
+
+function tick() {
+	console.log("1");
+	var mins = new Date().getMinutes();
+	if (mins == "44") {
+		// console.log("Hello");
+	} else {
+		return;
+		console.log("Not the time");
+	}
+	console.log('Tick ' + mins);
+}
+
+setInterval(tick, 60 * 1000);
+
 
 bot.login(botSettings.token);

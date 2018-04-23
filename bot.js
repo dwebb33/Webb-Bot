@@ -69,7 +69,6 @@ bot.on("message", async message => {
 
 
 function tick() {
-	console.log("1");
 	var mins = new Date().getMinutes();
 	if (mins == "44") {
 		// console.log("Hello");

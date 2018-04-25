@@ -2,13 +2,20 @@ const botSettings = require("./botsettings.json");
 const Discord = require('discord.js');
 const prefix = botSettings.prefix;
 const fs = require("fs");
+const snekfetch = require("snekfetch");
+
+var d = new Date();
 
 const bot = new Discord.Client({
-	disableEveryone: true
+	disableEveryone: true,
+	sync: true
 });
 bot.commands = new Discord.Collection();
 bot.nhl = require("./nhl.json");
 bot.currency = require("./currency.json");
+bot.cmdtime = require("./cmdTime.json");
+bot.mutes = require("./mutes.json");
+bot.mlb = require("./mlb.json");
 
 fs.readdir("./cmds/", (err, files) => {
 	if (err) console.error(err);
@@ -50,6 +57,32 @@ bot.on("ready", async () => {
 
 		}
 	});
+
+	bot.setInterval(() => {
+		for (let i in bot.mutes) {
+			let time = bot.mutes[i].time;
+			let guildId = bot.mutes[i].guild;
+			let guild = bot.guilds.get(guildId);
+			let member = guild.members.get(i);
+			let mutedRole = guild.roles.find(r => r.name === "Webb Bot Muted");
+			if (!mutedRole) continue;
+			d = new Date();
+			let dateT = `${d.getMonth()}/${d.getDay()}/${d.getFullYear()} - ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}:${d.getMilliseconds()}`;
+			if (Date.now() > time) {
+				console.log(`${i} is now able to be unmuted!`)
+
+				member.removeRole(mutedRole);
+				delete bot.mutes[i];
+
+				fs.writeFile("./mutes.json", JSON.stringify(bot.mutes, null, 4), err => {
+					if (err) throw err;
+					console.log(`I have unmuted ${member.user.tag}.`);
+
+					bot.channels.get("438421948188590094").send(`Unmuted ${member.user.tag}.  \`${dateT}\``);
+				})
+			}
+		}
+	}, 30 * 1000)
 });
 
 bot.on("message", async message => {
@@ -67,8 +100,18 @@ bot.on("message", async message => {
 
 });
 
+bot.on("guildMemberAdd", (member) => {
+	let dateT = `${d.getMonth()}/${d.getDay()}/${d.getFullYear()} - ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}:${d.getMilliseconds()}`;
+	bot.channels.get("438421948188590094").send(`<@${member.id}> joined.  \`${dateT}\``);
+});
+bot.on("guildMemberRemove", (member) => {
+	let dateT = `${d.getMonth()}/${d.getDay()}/${d.getFullYear()} - ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}:${d.getMilliseconds()}`;
+	bot.channels.get("438421948188590094").send(`<@${member.id}> left.  \`${dateT}\``);
+});
 
 function tick() {
+	//const ayy = bot.emojis.get("377235237110808576");
+
 	var mins = new Date().getMinutes();
 	if (mins == "44") {
 		// console.log("Hello");
@@ -79,7 +122,7 @@ function tick() {
 	console.log('Tick ' + mins);
 }
 
-setInterval(tick, 60 * 1000);
+setInterval(tick, 60 * 1000); // seconds * 1000ms
 
 
 bot.login(botSettings.token);

@@ -21,8 +21,9 @@ const Discord = module.require('discord.js');
 
 // This is what runs when the !**** command is used
 module.exports.run = async (bot, message, args) => {
-	var channelID = bot.channels.get("370023644740583435");
-	message.channel.channelID.send("test");
+	// Test: 370023644740583435
+	// NHL: 437947773053042699
+	bot.channels.get("370023644740583435").send("test");
 
 	// Need to work out the plan here for how I want the command to work
 	// Probably will need a JSON folder to store all the data collected here
@@ -208,6 +209,17 @@ module.exports.run = async (bot, message, args) => {
 	}
 }
 
+function tick() {
+	var mins = new Date().getMinutes();
+	if (mins == "44") {
+		// console.log("Hello");
+	} else {
+		return;
+		console.log("Not the time");
+	}
+	console.log('Tick ' + mins);
+}
+setInterval(tick, 60 * 1000);
 // The name represents the !**** command
 module.exports.help = {
 	name: "nhl"

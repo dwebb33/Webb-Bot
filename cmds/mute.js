@@ -1,4 +1,7 @@
+const fs = require("fs");
+
 module.exports.run = async (bot, message, args) => {
+	var d = new Date();
 	if (!message.member.hasPermission("MANAGE_MESSAGES")) return message.channel.sendMessage("You do not have permission to use this command.");
 
 	let toMute = message.guild.member(message.mentions.users.first()) || message.guild.members.get(args[0]);
@@ -29,8 +32,20 @@ module.exports.run = async (bot, message, args) => {
 
 	if (toMute.roles.has(role.id)) return message.channel.sendMessage("This user is already muted.");
 
+	bot.mutes[toMute.id] = {
+		guild: message.guild.id,
+		time: Date.now() + parseInt(args[1]) * 1000
+	}
+
 	await toMute.addRole(role);
-	message.channel.sendMessage("I have muted them.");
+	fs.writeFile("./mutes.json", JSON.stringify(bot.mutes, null, 4), err => {
+		if (err) throw err;
+		let dateT = `${d.getMonth()}/${d.getDay()}/${d.getFullYear()} - ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}:${d.getMilliseconds()}`;
+		message.channel.send(`I have muted <@${toMute.id}> for ${args[1]} second(s).`);
+		bot.channels.get("438421948188590094").send(`Muted <@${toMute.id}> for ${args[1]} second(s).  \`${dateT}\``);
+	})
+
+
 }
 
 module.exports.help = {

@@ -181,10 +181,41 @@ const snekfetch = require("snekfetch");
 // discord is used to do the obvious which is interact with discord
 const Discord = module.require('discord.js');
 
+const fs = require("fs");
+
 
 
 // This is what runs when the !**** command is used
 module.exports.run = async (bot, message, args) => {
+	await snekfetch.get(api).then(r => {
+		let gameTime = Date.parse(r.body.data.games.game[0].time_date);
+		if (r.body.data.games.game[0].ampm == "PM") {
+			gameTime += 12
+		}
+		bot.mlb[r.body.data.games.game[0].game_pk] = {
+			status: r.body.data.games.game[0].status.status,
+			away_id: r.body.data.games.game[0].away_team_id,
+			away_code: r.body.data.games.game[0].away_name_abbrev,
+			away_city: r.body.data.games.game[0].away_team_city,
+			away_name: r.body.data.games.game[0].away_team_name,
+			away_loss: r.body.data.games.game[0].away_loss,
+			away_win: r.body.data.games.game[0].away_win,
+			home_id: r.body.data.games.game[0].home_team_id,
+			home_code: r.body.data.games.game[0].home_name_abbrev,
+			home_city: r.body.data.games.game[0].home_team_city,
+			home_name: r.body.data.games.game[0].home_team_name,
+			home_loss: r.body.data.games.game[0].home_loss,
+			home_win: r.body.data.games.game[0].home_win
+		}
+		fs.writeFile("./mlb.json", JSON.stringify(bot.mlb, null, 4), err => {
+			if (err) throw err;
+			let dateT = `${d.getMonth()}/${d.getDay()}/${d.getFullYear()} - ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}:${d.getMilliseconds()}`;
+			message.channel.send(`I have added *${r.body.data.games.game[0].game_pk}* to JSON.`);
+			bot.channels.get("438421948188590094").send(`Added *${r.body.data.games.game[0].game_pk}* to JSON.  \`${dateT}\``);
+		})
+	});
+
+
 	// Need to work out the plan here for how I want the command to work
 	// Probably will need a JSON folder to store all the data collected here
 	console.log(api);

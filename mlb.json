@@ -1,3 +1,17 @@
 {
-
+    "529764": {
+        "status": "Preview",
+        "away_id": "116",
+        "away_code": "DET",
+        "away_city": "Detroit",
+        "away_name": "Tigers",
+        "away_loss": "11",
+        "away_win": "9",
+        "home_id": "134",
+        "home_code": "PIT",
+        "home_city": "Pittsburgh",
+        "home_name": "Pirates",
+        "home_loss": "10",
+        "home_win": "12"
+    }
 }

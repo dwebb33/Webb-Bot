@@ -34,7 +34,14 @@ fs.readdir("./cmds/", (err, files) => {
 		bot.commands.set(props.help.name, props);
 	});
 });
+var timeParsed = Date.parse("2018/04/25 16:05");
+var timeNow = Date.now()
+console.log("Time: " + timeParsed);
+console.log("Time Now: " + timeNow);
 
+if (timeParsed > timeNow) {
+	console.log("Time is still to come.");
+}
 
 bot.on("ready", async () => {
 
@@ -83,7 +90,48 @@ bot.on("ready", async () => {
 			}
 		}
 	}, 30 * 1000)
+	// bot.setInterval(() => {
+	// 	let day;
+	// 	let isStillPlaying = false;
+	// 	for (let i in bot.mlb) {
+	// 		if (bot.mlb[i].status == "In Progress")
+	// 	}
+	// 	if ((d.getDate() - 1) < 10) {
+	// 		day = "0" + d.getDate();
+	// 	}
+	// 	api = "http://gd.mlb.com/components/game/mlb/year_" + d.getFullYear() + "/month_"
+	// 	snekfetch.get(api).then(r => {
+	// 		let iterationNUM = 0;
+	// 		for (let i in bot.mlb) {
+	// 			if (bot.mlb[i].status != r.body.data.games.game[iterationNUM].status.status) {
+	// 				if (r.body.data.games.game[iterationNUM].status.status == "Pre-Game") {
+	// 					bot.mlb[i].status = "Postponed";
+	// 				} else if (r.body.data.games.game[iterationNUM].status.status == "Preview") {
+	// 					bot.mlb[i].status = "In Progress";
+	// 				} else if (r.body.data.games.game[iterationNUM].status.status == "Postponed") {
+	// 					bot.mlb[i].status = "Final";
+	// 				} else if (r.body.data.games.game[iterationNUM].status.status == "In Progress") {
+	// 					bot.mlb[i].status = "Pre-Game";
+	// 				} else if (r.body.data.games.game[iterationNUM].status.status == "Game Over") {
+	// 					bot.mlb[i].status = "Preview";
+	// 				} else if (r.body.data.games.game[iterationNUM].status.status == "Final") {
+	// 					bot.mlb[i].status = "Game Over";
+	// 				}
+	// 			}
+	//
+	// 			fs.writeFile("./mlb.json", JSON.stringify(bot.mlb, null, 4), err => {
+	// 				if (err) throw err;
+	// 				console.log(`I have updated the MLB JSON file.`);
+	//
+	// 				bot.channels.get("438421948188590094").send(`MLB JSON updated.  \`${dateT}\``);
+	// 			})
+	//
+	// 			iterationNUM++;
+	// 		}
+	// 	});
+	// }, 60 * 1000)
 });
+
 
 bot.on("message", async message => {
 	if (message.author.bot) return;

@@ -171,6 +171,8 @@ var day = [
 ];
 
 const api = "http://gd.mlb.com/components/game/mlb/year_" + d.getFullYear() + "/month_" + day[d.getMonth()] + "/day_" + day[d.getDate() - 1] + "/master_scoreboard.json"
+//const api = "https://raw.githubusercontent.com/dwebb33/mlbjsontest/master/db.json"
+
 // Each Team has their own api which is where this one is calling
 const apiTEAM = "";
 // There is an API for each individual game
@@ -185,36 +187,103 @@ const fs = require("fs");
 
 
 
+
 // This is what runs when the !**** command is used
 module.exports.run = async (bot, message, args) => {
-	await snekfetch.get(api).then(r => {
-		let gameTime = Date.parse(r.body.data.games.game[0].time_date);
-		if (r.body.data.games.game[0].ampm == "PM") {
-			gameTime += 12
-		}
-		bot.mlb[r.body.data.games.game[0].game_pk] = {
-			status: r.body.data.games.game[0].status.status,
-			away_id: r.body.data.games.game[0].away_team_id,
-			away_code: r.body.data.games.game[0].away_name_abbrev,
-			away_city: r.body.data.games.game[0].away_team_city,
-			away_name: r.body.data.games.game[0].away_team_name,
-			away_loss: r.body.data.games.game[0].away_loss,
-			away_win: r.body.data.games.game[0].away_win,
-			home_id: r.body.data.games.game[0].home_team_id,
-			home_code: r.body.data.games.game[0].home_name_abbrev,
-			home_city: r.body.data.games.game[0].home_team_city,
-			home_name: r.body.data.games.game[0].home_team_name,
-			home_loss: r.body.data.games.game[0].home_loss,
-			home_win: r.body.data.games.game[0].home_win
-		}
-		fs.writeFile("./mlb.json", JSON.stringify(bot.mlb, null, 4), err => {
-			if (err) throw err;
-			let dateT = `${d.getMonth()}/${d.getDay()}/${d.getFullYear()} - ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}:${d.getMilliseconds()}`;
-			message.channel.send(`I have added *${r.body.data.games.game[0].game_pk}* to JSON.`);
-			bot.channels.get("438421948188590094").send(`Added *${r.body.data.games.game[0].game_pk}* to JSON.  \`${dateT}\``);
-		})
-	});
+	// let jsonMLB = new Promise(function(resolve, reject) {
+	// 	snekfetch.get(api).then(r => {
+	// 		let gameLength = r.body.data.games.game.length;
+	// 		let finalMessage = "";
+	// 		let isAllDone = false
+	// 		Promise.all([
+	// 				bot.mlb["statusAll"] = {
+	// 					isAllDone: false
+	// 				}
+	// 			])
+	// 			.catch(() => console.error('Number of games failed to be added.'));
+	// 		let loopGames = new Promise(function(resolve, reject) {
+	// 			for (var i = 0; i < gameLength; i++) {
+	// 				let gameTime = Date.parse(r.body.data.games.game[i].time_date);
+	// 				if (r.body.data.games.game[i].ampm == "PM") {
+	// 					gameTime += 43200000;
+	// 				}
+	// 				let teamJSONBuild = new Promise(function(resolve, reject) {
+	// 					bot.mlb[r.body.data.games.game[i].game_pk];
+	// 					bot.mlb[r.body.data.games.game[i].game_pk] = {
+	// 						status: r.body.data.games.game[i].status.status,
+	// 						game_time: gameTime,
+	// 						game_time_END: gameTime + 28800000,
+	// 						away_id: r.body.data.games.game[i].away_team_id,
+	// 						away_code: r.body.data.games.game[i].away_name_abbrev,
+	// 						away_city: r.body.data.games.game[i].away_team_city,
+	// 						away_name: r.body.data.games.game[i].away_team_name,
+	// 						away_loss: r.body.data.games.game[i].away_loss,
+	// 						away_win: r.body.data.games.game[i].away_win,
+	// 						home_id: r.body.data.games.game[i].home_team_id,
+	// 						home_code: r.body.data.games.game[i].home_name_abbrev,
+	// 						home_city: r.body.data.games.game[i].home_team_city,
+	// 						home_name: r.body.data.games.game[i].home_team_name,
+	// 						home_loss: r.body.data.games.game[i].home_loss,
+	// 						home_win: r.body.data.games.game[i].home_win
+	// 					}
+	//
+	// 					let dateT = `${d.getMonth()}/${d.getDay()}/${d.getFullYear()} - ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}:${d.getMilliseconds()}`;
+	// 					fs.writeFile("./mlb.json", JSON.stringify(bot.mlb, null, 4), err => {
+	// 						if (err) throw err;
+	// 						//finalMessage = finalMessage.concat(`Added *${r.body.data.games.game[i].game_pk}* to JSON.  \`${dateT}\`\n`);
+	// 					})
+	//
+	//
+	// 					resolve('Set JSON for MLB');
+	//
+	// 					reject('Could not find Emote');
+	//
+	// 				});
+	// 				teamJSONBuild.then(function(fromResolve) {
+	// 					console.log(fromResolve);
+	// 				}).catch(function(fromReject) {
+	// 					console.log(fromReject);
+	// 				});
+	//
+	// 				if (bot.mlb[r.body.data.games.game[i].game_pk].status == "") {
+	//
+	// 				}
+	// 			}
+	// 			resolve('Found Away and Home Emote');
+	//
+	// 			reject('Could not find Emote');
+	//
+	// 		});
+	// 		loopGames.then(function(fromResolve) {
+	// 			console.log(fromResolve);
+	// 		}).catch(function(fromReject) {
+	// 			console.log(fromReject);
+	// 		});
+	//
+	// 		bot.channels.get("438421948188590094").send("Updated MLB JSON");
+	// 		console.log("Updated MLB JSON.");
+	//
+	// 	});
+	// 	resolve('Found Away and Home Emote');
+	//
+	// 	reject('Could not find Emote');
+	// });
+	// jsonMLB.then(function(fromResolve) {
+	// 	console.log(fromResolve);
+	// }).catch(function(fromReject) {
+	// 	console.log(fromReject);
+	// });
 
+
+
+
+
+
+	//////////////////////////////////////////////////
+	//						//
+	//    * Need To Re-Do From Here and Below *     //
+	//						//
+	//////////////////////////////////////////////////
 
 	// Need to work out the plan here for how I want the command to work
 	// Probably will need a JSON folder to store all the data collected here

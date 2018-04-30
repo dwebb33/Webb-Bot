@@ -419,11 +419,9 @@ bot.on("ready", async () => {
 
 								//console.log('Added to bot MLB' + bot.mlb[r.body.data.games.game[i].game_pk].status);
 
-								fs.writeFile("./mlb.json", JSON.stringify(bot.mlb, null, 4), err => {
-									if (err) throw err;
-								})
 
-								resolve('Set JSON for MLB');
+
+
 
 								reject('Could Not Save Team');
 
@@ -433,6 +431,11 @@ bot.on("ready", async () => {
 							}).catch(function(fromReject) {
 								console.log(fromReject);
 							});
+
+							fs.writeFile("./mlb.json", JSON.stringify(bot.mlb, null, 4), err => {
+								if (err) throw err;
+								resolve('Set JSON for MLB');
+							})
 
 						}
 						resolve('Dab on the hoes');
@@ -856,8 +859,13 @@ bot.on("ready", async () => {
 						}
 					}
 
+					fs.writeFile("./mlb.json", JSON.stringify(bot.mlb, null, 4), err => {
+						if (err) throw err;
+						//isComplete = false;
+						bot.channels.get("438421948188590094").send(`JSON Deleted`);
+					});
 
-					if (isComplete && newD.getHours() > 5) {
+					if (isComplete) {
 						for (let i in bot.mlb) {
 							delete bot.mlb[i];
 						}
@@ -892,7 +900,7 @@ bot.on("ready", async () => {
 		let timeNow = new Date();
 		let extendedTime = `${timeNow.getHours()}:${timeNow.getMinutes()}:${timeNow.getSeconds()}:${timeNow.getMilliseconds()}`;
 		console.log(`Time: ${extendedTime}`);
-	}, 15 * 1000)
+	}, 60 * 1000)
 });
 
 
